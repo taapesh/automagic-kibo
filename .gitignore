@@ -1,0 +1,4 @@
+setup_db.sh
+parfile.par
+setup_db.sql
+.DS_STORE
