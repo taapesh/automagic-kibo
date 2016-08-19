@@ -301,9 +301,9 @@ def deploy_site(site, branch=None):
 
 	# Run the ant deploy command from the correct directory
 	if branch is None:
-		command = "cd " + MARKETLIVE_HOME + "/sites/" + site + "/trunk/source/ant; ant deployClean -Ddeploy.name=" + site
+		command = "cd " + MARKETLIVE_HOME + "/sites/" + site + "/trunk/source/ant;"
 	else:
-		command = "cd " + MARKETLIVE_HOME + "/sites/" + site + "/branches/" + branch + "/source/ant; ant deployClean"
+		command = "cd " + MARKETLIVE_HOME + "/sites/" + site + "/branches/" + branch + "/source/ant;"
 		
 	command += "ant deployClean -Ddeploy.name=" + site
 	subprocess.call([command], shell=True)
