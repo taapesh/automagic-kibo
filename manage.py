@@ -33,6 +33,8 @@ class bcolors:
 def refresh_mongo(site, branch=None, version=None):
 	print
 	print "Refreshing local mongo db...\n"
+	
+	subprocess.call(["pkill -9 -f tomcat"], shell=True)
 
 	if branch is None:
 		script_dir = MARKETLIVE_HOME + "/sites/" + site + "/trunk/source/ant/refreshLocalMongo_aws.sh"
