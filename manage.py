@@ -33,7 +33,7 @@ class bcolors:
 def refresh_mongo(site, branch=None, version=None):
 	print
 	print "Refreshing local mongo db...\n"
-	
+
 	subprocess.call(["pkill -9 -f tomcat"], shell=True)
 
 	if branch is None:
@@ -77,6 +77,8 @@ def refresh_mongo(site, branch=None, version=None):
 def setup_db(site):
 	print
 	print "Running db setup...\n"
+	
+	subprocess.call(["pkill -9 -f tomcat"], shell=True)
 
 	opener = urllib.URLopener()
 
@@ -291,7 +293,7 @@ def stop_tomcat(site, version=None):
 	print
 	print "Stopping tomcat...\n"
 	command = MARKETLIVE_HOME + TOMCAT_DIR + "shutdown.sh " + site + " -force"
-	print command
+	#print command
 	subprocess.call([MARKETLIVE_HOME + TOMCAT_DIR + "shutdown.sh " + site + " -force"], shell=True)
 	subprocess.call([MARKETLIVE_HOME + TOMCAT_DIR + "shutdown.sh " + site + "-solr" + " -force"], shell=True)
 	print bcolors.OKGREEN + "Tomcat stopped" + bcolors.ENDC

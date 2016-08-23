@@ -1,4 +1,5 @@
 setup_db.sh
 parfile.par
+parfile.par-e
 setup_db.sql
 .DS_STORE
