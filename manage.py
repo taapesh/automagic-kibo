@@ -34,8 +34,6 @@ def refresh_mongo(site, branch=None, version=None):
 	print
 	print "Refreshing local mongo db...\n"
 
-	subprocess.call(["pkill -9 -f tomcat"], shell=True)
-
 	if branch is None:
 		script_dir = MARKETLIVE_HOME + "/sites/" + site + "/trunk/source/ant/refreshLocalMongo_aws.sh"
 	else:
@@ -77,9 +75,14 @@ def refresh_mongo(site, branch=None, version=None):
 def setup_db(site):
 	print
 	print "Running db setup...\n"
-	
-	subprocess.call(["pkill -9 -f tomcat"], shell=True)
 
+	subprocess.call(["sudo touch " + BASE_DIR + "/setup_db.sql"], shell=True)
+	subprocess.call(["sudo touch " + BASE_DIR + "/parfile.par"], shell=True)
+	subprocess.call(["sudo touch " + BASE_DIR + "/setup_db.sh"], shell=True)
+	subprocess.call(["sudo chmod 777 " + BASE_DIR + "/parfile.par"], shell=True)
+	subprocess.call(["sudo chmod 777 " + BASE_DIR + "/setup_db.sql"], shell=True)
+	subprocess.call(["sudo chmod 777 " + BASE_DIR + "/setup_db.sh"], shell=True)
+	
 	opener = urllib.URLopener()
 
 	infile = opener.open(S3_URL + "ml_import_template.par")
@@ -270,12 +273,11 @@ def restart_tomcat(site, version=None):
 	print "Restarting tomcat...\n"
 
 	# Stop tomcat processes and start up tomcat for solr and site
-	subprocess.call(["pkill -9 -f tomcat"], shell=True)
 	subprocess.call([MARKETLIVE_HOME + TOMCAT_DIR + "shutdown.sh " + site +  " -force"], shell=True)
 	subprocess.call([MARKETLIVE_HOME + TOMCAT_DIR + "shutdown.sh " + site + "-solr" + " -force"], shell=True)
 	subprocess.call([MARKETLIVE_HOME + TOMCAT_DIR + "startup.sh " + site], shell=True)
 	subprocess.call([MARKETLIVE_HOME + TOMCAT_DIR + "startup.sh " + site + "-solr"], shell=True)
-	print bcolors.OKGREEN + "Tomcat started" + bcolors.ENDC
+	print bcolors.OKGREEN + "Tomcat restarted" + bcolors.ENDC
 	print "python manage.py tail " + site
 
 
@@ -287,13 +289,12 @@ def start_tomcat(site):
 	subprocess.call([command], shell=True)
 	subprocess.call([command + "-solr"], shell=True)
 	print bcolors.OKGREEN + "Tomcat started" + bcolors.ENDC
+	print "python manage.py tail " + site
 
 
 def stop_tomcat(site, version=None):
 	print
 	print "Stopping tomcat...\n"
-	command = MARKETLIVE_HOME + TOMCAT_DIR + "shutdown.sh " + site + " -force"
-	#print command
 	subprocess.call([MARKETLIVE_HOME + TOMCAT_DIR + "shutdown.sh " + site + " -force"], shell=True)
 	subprocess.call([MARKETLIVE_HOME + TOMCAT_DIR + "shutdown.sh " + site + "-solr" + " -force"], shell=True)
 	print bcolors.OKGREEN + "Tomcat stopped" + bcolors.ENDC
