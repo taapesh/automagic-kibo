@@ -16,7 +16,7 @@ TOMCAT_DIR = "/tomcat/apache-tomcat-7.0.52/bin/"
 S3_URL = "https://s3-us-west-1.amazonaws.com/kibo-files/"
 
 commands = ["options", "buildsite", "deploysite", "getsite", "setupdb", "setuptomcat", "refreshmongo", "snapshot",
-			"tomcatstop", "tomcatstart", "tomcatrestart", "tail", "getdependencies"]
+			"tomcatstop", "tomcatstart", "tomcatrestart", "tail", "getdependencies", "quickbuild"]
 
 
 class bcolors:
@@ -109,9 +109,9 @@ def setup_db(site):
 	subprocess.call([BASE_DIR + "/setup_db.sh " + site], shell=True)
 
 	# Remove temp files
-	subprocess.call(["sudo rm -f " + BASE_DIR + "/parfile.par"], shell=True)
-	subprocess.call(["sudo rm -f " + BASE_DIR + "/setup_db.sql"], shell=True)
-	subprocess.call(["sudo rm -f " + BASE_DIR + "/setup_db.sh"], shell=True)
+	#subprocess.call(["sudo rm -f " + BASE_DIR + "/parfile.par"], shell=True)
+	#subprocess.call(["sudo rm -f " + BASE_DIR + "/setup_db.sql"], shell=True)
+	#subprocess.call(["sudo rm -f " + BASE_DIR + "/setup_db.sh"], shell=True)
 
 	print bcolors.OKGREEN + "Done" + bcolors.ENDC
 
@@ -546,6 +546,42 @@ if __name__=="__main__":
 			site = sys.argv[2]
 			branch = sys.argv[3]
 			install_site(site, branch)
+
+	elif command == "quickbuild":
+		if num_args < 3:
+			print
+			print "usage: python manage.py " + command + " <merchant> <optional branch>"
+			print bcolors.BOLD + bcolors.FAIL + "error: Must provide merchant name" + bcolors.ENDC
+			print
+			sys.exit(1)
+
+		site = sys.argv[2]
+
+		# Build a specific branch of the website
+		if num_args == 4:
+			branch = sys.argv[3]
+			print "Building " + site + " branch: " + branch + "..."
+			install_site(site, branch)
+			version = get_site_version(site, branch)
+			install_dependencies(site, branch)
+			deploy_site(site, branch)
+
+		# Build trunk
+		elif num_args == 3:
+			branch = "trunk"
+			print "Building " + site + " trunk..."
+			site = sys.argv[2]
+			install_site(site)
+			version = get_site_version(site)
+			install_dependencies(site)
+			deploy_site(site)
+
+		print bcolors.BOLD + bcolors.OKGREEN + "Build complete" + bcolors.ENDC
+		print bcolors.BOLD + bcolors.OKGREEN + "Build:" + bcolors.ENDC
+		print bcolors.BOLD + bcolors.OKGREEN + "Merchant: " + site + bcolors.ENDC
+		print bcolors.BOLD + bcolors.OKGREEN + "Branch: " + branch + bcolors.ENDC
+		print bcolors.BOLD + bcolors.OKGREEN + "Version: " + version + bcolors.ENDC
+
 
 	elif command == "buildsite":
 
