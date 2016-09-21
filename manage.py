@@ -312,7 +312,6 @@ def deploy_site(site, branch=None):
 		
 	command += "ant deployClean -Ddeploy.name=" + site
 	subprocess.call([command], shell=True)
-	print bcolors.OKGREEN + site + " deployed" + bcolors.ENDC
 
 
 def get_site_version(site, branch=None):
@@ -622,7 +621,6 @@ if __name__=="__main__":
 			deploy_site(site)
 
 		print bcolors.BOLD + bcolors.OKGREEN + "Build complete" + bcolors.ENDC
-		print bcolors.BOLD + bcolors.OKGREEN + "Build:" + bcolors.ENDC
 		print bcolors.BOLD + bcolors.OKGREEN + "Merchant: " + site + bcolors.ENDC
 		print bcolors.BOLD + bcolors.OKGREEN + "Branch: " + branch + bcolors.ENDC
 		print bcolors.BOLD + bcolors.OKGREEN + "Version: " + version + bcolors.ENDC
