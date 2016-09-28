@@ -350,7 +350,7 @@ def display_options():
 		print "- " + command + " -options"
 
 	print
-	print bcolors.UNDERLINE + "Example usage:" + bcolors.ENDC + " python manage.py runserver steinmart"
+	print bcolors.UNDERLINE + "Example usage:" + bcolors.ENDC + " python manage.py quickbuild steinmart"
 	print
 
 
